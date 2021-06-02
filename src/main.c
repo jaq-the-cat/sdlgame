@@ -38,10 +38,6 @@ void init() {
     rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
     IMG_Init(IMG_INIT_PNG);
-
-    // player
-    player = &entities[0];
-    player->sprite = IMG_LoadTexture(rend, "sprites/player.png");
 }
 
 void handleKey(SDL_Scancode scancode, int down) {
@@ -73,6 +69,14 @@ void handleKey(SDL_Scancode scancode, int down) {
 
 int main() {
     init();
+
+    // initialize player
+    player = &entities[0];
+    player->sprite = IMG_LoadTexture(rend, "sprites/player.png");
+
+    extern void appendToTexture(SDL_Texture*, SDL_Texture*, SDL_Rect);
+    SDL_Texture *otherTexture = IMG_LoadTexture(rend, "sprites/player.png");
+    appendToTexture(player->sprite, otherTexture, (SDL_Rect) {64, 64, 64, 64});
 
     int starting_tick = SDL_GetTicks();
     float new_time, delta;
