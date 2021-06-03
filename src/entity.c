@@ -42,7 +42,7 @@ void eremove(void *e) {
         return;
     }
     // scroll through until node is e
-    for (; node != NULL && &node->e != e; node = node->next);
+    for (; node != NULL && node->e != e; node = node->next);
     node->previous->next = node->next;
     free(node);
     es.length--;

@@ -19,45 +19,56 @@ typedef struct entity {
     SDL_Texture *texture;
 } entity;
 
-void start(entities *es) {
-    eadd(&(entity) {
-        .type = PLAYER,
-        .origin = {0, 0},
-        .velocity = {0, 0},
-        .size = {64, 64},
-        .gravity = 1,
-        .texture = IMG_LoadTexture(rend, "sprites/player.png"),
-    }); // player
+void* makeentity(entity temp) {
+    entity *e = malloc(sizeof(temp));
+    e->type = temp.type;
+    e->origin = temp.origin;
+    e->velocity = temp.velocity;
+    e->size = temp.size;
+    e->gravity = temp.gravity;
+    e->texture = temp.texture;
+    return e;
+}
 
-    eadd(&(entity) {
+void start(entities *es) {
+    eadd(makeentity((entity) {
+        .type = PLAYER,
+        .origin = {0.f, 0.f},
+        .velocity = {0.f, .0f},
+        .size = {64.f, 64.f},
+        .gravity = 1.f,
+        .texture = IMG_LoadTexture(rend, "sprites/player.png"),
+    })); // player
+
+    eadd(makeentity((entity) {
         .type = PLAYER,
         .origin = {65, 0},
         .velocity = {0, 0},
         .size = {64, 64},
         .gravity = 1,
         .texture = IMG_LoadTexture(rend, "sprites/player.png"),
-    }); // player
+    })); // player
 
     for (int i=0; i<20; i++) {
-        eadd(&(entity) {
+        eadd(makeentity((entity) {
             .type = OBJECT,
             .origin = {i*64, 64*2},
             .velocity = {0, 0},
             .size = {64, 64},
             .gravity = 0,
             .texture = IMG_LoadTexture(rend, "sprites/ground.png"),
-        }); // player
+        })); // player
     }
 
     for (int i=0; i<20; i++) {
-        eadd(&(entity) {
+        eadd(makeentity((entity) {
             .type = OBJECT,
             .origin = {i*64, 64*6},
             .velocity = {0, 0},
             .size = {64, 64},
             .gravity = 0,
             .texture = IMG_LoadTexture(rend, "sprites/ground.png"),
-        }); // player
+        })); // player
     }
 }
 
@@ -73,7 +84,8 @@ bool update(entities *es, SDL_Event *event) {
 
 void render(void *e) {
     entity *en = (entity*) e;
-    printf("(%f, %f) (%f, %f)\n", en->origin.x, en->origin.y, en->size.x, en->size.y);
+    printf("{\n\t%d\n\t(%f, %f)\n\t(%f, %f)\n}\n\n",
+            en->type, en->origin.x, en->origin.y, en->size.x, en->size.y);
     SDL_Rect dst = {
         en->origin.x,
         en->origin.y,
@@ -85,6 +97,7 @@ void render(void *e) {
 
 void destroy(void *e) {
     SDL_DestroyTexture(((entity*) e)->texture);
+    free((entity*) e);
 }
 
 void end() {
