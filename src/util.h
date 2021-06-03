@@ -1,31 +1,29 @@
-#pragma once
+#include <math.h>
+#include <stdio.h>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
-#include <stdbool.h>
-#include "gjk.h"
+#define PI 3.141592653589
+#define POLYGON(sides) {8, (point[sides]) {}};
 
-#define WIDTH 1920/(1.2)
-#define HEIGHT 1080/(1.2)
+typedef struct point {
+    int x, y;
+} point;
 
-#define COLOR int r, int g, int b
+typedef struct polygon {
+    int sides;
+    point* points;
+} polygon;
 
-enum ETYPE {
-    PLAYER,
-    GROUND,
-};
+void polygen(polygon *dest, int xc, int yc, int x, int y, int n) {
+    int lastx, lasty;
+    double r = sqrt((x - xc) * (x - xc) + (y - yc) * (y - yc));
+    double a = atan2(y - yc, x - xc);
 
-typedef struct {
-    enum ETYPE type;
-    float x, y;
-    float vx, vy;
-    int w, h;
-    bool grounded;
-    SDL_Texture *sprite;
-    int vertexcount;
-    vec2 hitbox[4];
-} Entity;
-
-void clearScreen(COLOR);
-void drawEntity(Entity *entity);
-bool collide(Entity *a, Entity *b);
+    for (int i = 0; i < n; i++) {
+        lastx = x; lasty = y;
+        a = a + PI * 2 / n;
+        x = round((double) xc + (double) r * cos(a));
+        y = round((double) yc + (double) r * sin(a));
+        dest->points[i] = (point) {x, y};
+        printf("POINT: %d %d\n", x, y);
+    }
+}

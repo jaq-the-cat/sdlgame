@@ -1,28 +1,23 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_timer.h>
-
-#include "util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-extern Entity entities[];
+#include "conf.h"
+#include "util.h"
 
-Entity *player;
 SDL_Window *win;
 SDL_Renderer *rend;
-
 static bool close = false;
-
-#define PLAYER_SPEED 2
-#define MAXFPS 60
 
 struct Buttons {
     bool w, a, s, d,
-    space;
+        space;
 } buttons = {false, false, false, false, false};
 
 void init() {
@@ -30,14 +25,62 @@ void init() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
         printf("Error initializing SDL: %s\n", SDL_GetError());
     win = SDL_CreateWindow(
-        "Game",
+        "SDL Game",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         WIDTH, HEIGHT,
         0);
     rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-
     IMG_Init(IMG_INIT_PNG);
+}
+
+void handleKey();
+
+int main() {
+    init();
+
+    polygon octa = POLYGON(8);
+    polygen(&octa, 0, 0, 10, 10, octa.sides);
+
+    int starting_tick = SDL_GetTicks();
+    float new_time, delta;
+    while (!close) {
+        // Get FPS
+        if ((1000 / MAXFPS) > SDL_GetTicks() - starting_tick)
+            SDL_Delay(1000 / MAXFPS - (SDL_GetTicks() - starting_tick));
+
+        SDL_Event event;
+
+        // Clear screen
+        SDL_SetRenderDrawColor(rend, BACKGROUND, 255);
+        SDL_RenderClear(rend);
+        // Render stuff
+
+        // Draw to screen
+        SDL_RenderPresent(rend);
+
+        // Events mangement
+        SDL_PollEvent(&event);
+        switch (event.type) {
+        case SDL_QUIT:
+            close = true;
+            break;
+        case SDL_KEYDOWN:
+            handleKey(event.key.keysym.scancode, true);
+            break;
+        case SDL_KEYUP:
+            handleKey(event.key.keysym.scancode, false);
+            break;
+        }
+    }
+
+    /*SDL_DestroyTexture();*/
+    IMG_Quit();
+    SDL_DestroyRenderer(rend);
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+
+    return EXIT_SUCCESS;
 }
 
 void handleKey(SDL_Scancode scancode, int down) {
@@ -65,63 +108,4 @@ void handleKey(SDL_Scancode scancode, int down) {
         default:
             break;
     }
-}
-
-int main() {
-    init();
-
-    // initialize player
-    player = &entities[0];
-    player->sprite = IMG_LoadTexture(rend, "sprites/player.png");
-
-    extern void appendToTexture(SDL_Texture*, SDL_Texture*, SDL_Rect);
-    SDL_Texture *otherTexture = IMG_LoadTexture(rend, "sprites/player.png");
-    appendToTexture(player->sprite, otherTexture, (SDL_Rect) {64, 64, 64, 64});
-
-    int starting_tick = SDL_GetTicks();
-    float new_time, delta;
-    while (!close) {
-        // Get FPS
-        if ((1000 / MAXFPS) > SDL_GetTicks() - starting_tick)
-            SDL_Delay(1000 / MAXFPS - (SDL_GetTicks() - starting_tick));
-
-        SDL_Event event;
-
-        // Render stuff
-        clearScreen(255, 255, 255);
-        drawEntity(player);
-
-        // Draw to screen
-        SDL_RenderPresent(rend);
-
-        // Events mangement
-        SDL_PollEvent(&event);
-        switch (event.type) {
-        case SDL_QUIT:
-            close = true;
-            break;
-        case SDL_KEYDOWN:
-            handleKey(event.key.keysym.scancode, true);
-            break;
-        case SDL_KEYUP:
-            handleKey(event.key.keysym.scancode, false);
-            break;
-        }
-
-        player->vx = -PLAYER_SPEED * buttons.a;
-        player->vx += PLAYER_SPEED * buttons.d;
-        player->vy = -PLAYER_SPEED * buttons.w;
-        player->vy += PLAYER_SPEED * buttons.s;
-
-        player->x += player->vx;
-        player->y += player->vy;
-    }
-
-    SDL_DestroyTexture(player->sprite);
-    IMG_Quit();
-    SDL_DestroyRenderer(rend);
-    SDL_DestroyWindow(win);
-    SDL_Quit();
-
-    return EXIT_SUCCESS;
 }
