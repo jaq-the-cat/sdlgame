@@ -33,7 +33,7 @@ void init() {
     IMG_Init(IMG_INIT_PNG);
 }
 
-int main() {
+int run() {
     init();
 
     // game start
@@ -79,7 +79,7 @@ int main() {
 
     // game end
     end();
-    /*efree(es);*/
+    efree(es);
 
     IMG_Quit();
     SDL_DestroyRenderer(rend);

@@ -58,3 +58,7 @@ bool update(entities *es, SDL_Event *event) {
 
 void end() {
 }
+
+int main() {
+    return run();
+}
