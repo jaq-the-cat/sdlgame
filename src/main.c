@@ -10,13 +10,13 @@
 
 #include "conf.h"
 #include "entity.h"
-#include "kb.h"
 
 #include "game.h"
 
 // globals
 extern bool close;
 extern buttons keys;
+extern entities *es;
 
 SDL_Window *win;
 SDL_Renderer *rend;
@@ -38,7 +38,7 @@ int main() {
     init();
 
     // game start
-    start();
+    start(es);
 
     int starting_tick = SDL_GetTicks();
     float new_time, delta;
@@ -65,7 +65,7 @@ int main() {
         }
 
         // update stuff
-        update(&event);
+        close = update(&event, es);
 
         // Clear screen
         SDL_SetRenderDrawColor(rend, BACKGROUND, 255);
@@ -80,6 +80,7 @@ int main() {
 
     // game end
     end();
+    efree(es);
 
     IMG_Quit();
     SDL_DestroyRenderer(rend);

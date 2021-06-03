@@ -1,6 +1,6 @@
 #pragma once
 
 void start();
-void update();
+bool update();
 void render();
 void end();
