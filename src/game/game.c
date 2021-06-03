@@ -2,16 +2,25 @@
 
 #include <SDL2/SDL_image.h>
 
-extern SDL_Renderer rend;
+extern SDL_Renderer *rend;
 
 void start(entities *es) {
     eadd((entity) {
         .type = PLAYER,
-        .origin = {10, 10},
+        .origin = {0, 0},
         .velocity = {0, 0},
         .size = {64, 64},
         .gravity = 1,
-        .texture = IMG_LoadTexture(&rend, "sprites/player.png"),
+        .texture = IMG_LoadTexture(rend, "sprites/player.png"),
+    }); // player
+
+    eadd((entity) {
+        .type = PLAYER,
+        .origin = {32, 32},
+        .velocity = {0, 0},
+        .size = {64, 64},
+        .gravity = 1,
+        .texture = IMG_LoadTexture(rend, "sprites/player.png"),
     }); // player
 }
 
