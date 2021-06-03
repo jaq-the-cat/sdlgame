@@ -28,10 +28,10 @@ typedef struct entities {
 } entities;
 
 // linked list stuff
-void eadd(entities *es, entity e);
-void eremove(entities *es, entity *e);
-void eclear(entities *es);
+void eadd(entity e);
+void eremove(entity *e);
+void efree();
 
 // sdl
-void eupdate(entities *es);
-void erender(entities *es);
+void eupdate();
+void erender();

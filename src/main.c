@@ -12,6 +12,8 @@
 #include "entity.h"
 #include "kb.h"
 
+#include "game.h"
+
 // globals
 extern bool close;
 extern buttons keys;
@@ -35,8 +37,13 @@ void init() {
 int main() {
     init();
 
+    // game start
+    start();
+
     int starting_tick = SDL_GetTicks();
     float new_time, delta;
+
+    SDL_Event event;
     while (!close) {
         // Get FPS
         if ((1000 / MAXFPS) > SDL_GetTicks() - starting_tick)
@@ -44,31 +51,31 @@ int main() {
 
         SDL_Event event;
 
-        // Clear screen
-        SDL_SetRenderDrawColor(rend, BACKGROUND, 255);
-        SDL_RenderClear(rend);
-
-        // Render stuff
-
-        // Draw to screen
-        SDL_RenderPresent(rend);
-
         // Events mangement
         SDL_PollEvent(&event);
         switch (event.type) {
         case SDL_QUIT:
             close = true;
             break;
-        case SDL_KEYDOWN:
-            handleKey(event.key.keysym.scancode, true);
-            break;
-        case SDL_KEYUP:
-            handleKey(event.key.keysym.scancode, false);
-            break;
         }
+
+        // update stuff
+        update(&event);
+
+        // Clear screen
+        SDL_SetRenderDrawColor(rend, BACKGROUND, 255);
+        SDL_RenderClear(rend);
+
+        // Render stuff
+        render();
+
+        // Draw to screen
+        SDL_RenderPresent(rend);
     }
 
-    /*SDL_DestroyTexture();*/
+    // game end
+    end();
+
     IMG_Quit();
     SDL_DestroyRenderer(rend);
     SDL_DestroyWindow(win);

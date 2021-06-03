@@ -1,5 +1,6 @@
 -SOURCE
 src/*.c
+src/game/*.c
 
 -COMMANDS
 sdl2-config --libs --cflags
