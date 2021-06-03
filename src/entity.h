@@ -5,6 +5,7 @@
 #include "gjk.h"
 
 typedef enum ENTITY_TYPE {
+    PLAYER,
     ENEMY,
     OBJECT,
     OBJECT_DMG,

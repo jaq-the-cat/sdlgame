@@ -5,6 +5,7 @@ extern entities *es;
 
 void erender() {
     for (entities *node = es; node != NULL; node = node->next) {
+        printf("rendering entity\n");
         // render node
         SDL_Rect dst = {
             node->e.origin.x,
