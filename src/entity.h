@@ -21,4 +21,17 @@ typedef struct entity {
     SDL_Texture *texture;
 } entity;
 
-void tick(entity *e);
+typedef struct entities {
+    struct entities *previous;
+    entity e;
+    struct entities *next;
+} entities;
+
+// linked list stuff
+void eadd(entities *es, entity e);
+void eremove(entities *es, entity *e);
+void eclear(entities *es);
+
+// sdl
+void eupdate(entities *es);
+void erender(entities *es);

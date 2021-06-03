@@ -20,7 +20,6 @@ SDL_Window *win;
 SDL_Renderer *rend;
 
 void init() {
-    // window
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
         printf("Error initializing SDL: %s\n", SDL_GetError());
     win = SDL_CreateWindow(
@@ -48,6 +47,7 @@ int main() {
         // Clear screen
         SDL_SetRenderDrawColor(rend, BACKGROUND, 255);
         SDL_RenderClear(rend);
+
         // Render stuff
 
         // Draw to screen
