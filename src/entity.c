@@ -36,7 +36,6 @@ void eadd(entity e) {
         return;
     }
 
-    printf("others\n");
     // create new node
     es.head->previous = makenode(e, es.head);
     es.head = es.head->previous;
