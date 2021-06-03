@@ -1,12 +1,19 @@
 #include "entity.h"
 
+extern SDL_Renderer *rend;
 extern entities *es;
 
-void tick(entity *e) {
-    e->origin.x += e->velocity.x;
-    e->origin.y += e->velocity.y;
-
-    e->velocity.y -= e->gravity;
+void erender() {
+    for (entities *node = es; node != NULL; node = node->next) {
+        // render node
+        SDL_Rect dst = {
+            node->e.origin.x,
+            node->e.origin.y,
+            node->e.size.x,
+            node->e.size.y,
+        };
+        SDL_RenderCopy(rend, node->e.texture, NULL, &dst);
+    }
 }
 
 void makenode(entities *node, entity e, entities *next) {

@@ -15,7 +15,6 @@
 
 // globals
 extern bool close;
-extern buttons keys;
 extern entities *es;
 
 SDL_Window *win;
@@ -72,7 +71,7 @@ int main() {
         SDL_RenderClear(rend);
 
         // Render stuff
-        render();
+        erender();
 
         // Draw to screen
         SDL_RenderPresent(rend);

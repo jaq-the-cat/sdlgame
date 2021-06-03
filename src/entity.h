@@ -33,5 +33,4 @@ void eremove(entity *e);
 void efree();
 
 // sdl
-void eupdate();
 void erender();

@@ -3,7 +3,8 @@
 void start() {
 }
 
-void update() {
+bool update(SDL_Event *event, entities *es) {
+    return true;
 }
 
 void render() {
