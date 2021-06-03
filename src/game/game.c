@@ -2,52 +2,28 @@
 
 #include <SDL2/SDL_image.h>
 
+#include "gjk.h"
+#include "entities.h"
+
 extern SDL_Renderer *rend;
 
-typedef enum etype {
-    PLAYER,
-    DMG,
-    OBJECT,
-} etype;
+typedef struct {
+    bool w, a, s, d, space;
+} keys;
 
-typedef struct entity {
-    etype type;
-    vec2 origin;
-    vec2 velocity;
-    vec2 size;
-    float gravity;
-    SDL_Texture *texture;
-} entity;
-
-void* makeentity(entity temp) {
-    entity *e = malloc(sizeof(temp));
-    e->type = temp.type;
-    e->origin = temp.origin;
-    e->velocity = temp.velocity;
-    e->size = temp.size;
-    e->gravity = temp.gravity;
-    e->texture = temp.texture;
-    return e;
-}
+keys kb = {};
+entity *player;
 
 void start(entities *es) {
-    eadd(makeentity((entity) {
+    player = makeentity((entity) {
         .type = PLAYER,
         .origin = {0.f, 0.f},
         .velocity = {0.f, .0f},
         .size = {64.f, 64.f},
         .gravity = 1.f,
         .texture = IMG_LoadTexture(rend, "sprites/player.png"),
-    })); // player
-
-    eadd(makeentity((entity) {
-        .type = PLAYER,
-        .origin = {65, 0},
-        .velocity = {0, 0},
-        .size = {64, 64},
-        .gravity = 1,
-        .texture = IMG_LoadTexture(rend, "sprites/player.png"),
-    })); // player
+    }); // player
+    eadd(player);
 
     for (int i=0; i<20; i++) {
         eadd(makeentity((entity) {
@@ -72,14 +48,49 @@ void start(entities *es) {
     }
 }
 
-bool update(entities *es, SDL_Event *event) {
-    switch (event->key.keysym.scancode) {
+bool kbhandle(SDL_Scancode scancode, bool down) {
+    switch (scancode) {
+    case SDL_SCANCODE_A:
+    case SDL_SCANCODE_LEFT:
+        kb.a = down;
+        break;
+    case SDL_SCANCODE_D:
+    case SDL_SCANCODE_RIGHT:
+        kb.d = down;
+        break;
+    case SDL_SCANCODE_W:
+    case SDL_SCANCODE_UP:
+        kb.w = down;
+        break;
+    case SDL_SCANCODE_S:
+    case SDL_SCANCODE_DOWN:
+        kb.s = down;
+        break;
     case SDL_SCANCODE_ESCAPE:
         return true;
     default:
         break;
     }
     return false;
+}
+
+// global update
+bool gupdate(entities *es, SDL_Event *event) {
+    bool kb = kbhandle(event->key.keysym.scancode, event->type == SDL_KEYDOWN);
+    return kb;
+}
+
+// entity update
+void update(void *e) {
+    entity *en = (entity*) e;
+
+    player->velocity.x = -0.4 * kb.a;
+    player->velocity.x += 0.4 * kb.d;
+    player->origin.x += player->velocity.x;
+
+    player->velocity.y = -0.4 * kb.w;
+    player->velocity.y += 0.4 * kb.s;
+    player->origin.y += player->velocity.y;
 }
 
 void render(void *e) {

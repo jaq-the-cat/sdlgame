@@ -6,7 +6,8 @@
 int run();
 
 void start(entities *es);
-bool update(entities *es, SDL_Event *event);
+bool gupdate(entities *es, SDL_Event *event);
+void update(void* e);
 void render(void *e);
 void destroy(void *e);
 void end();

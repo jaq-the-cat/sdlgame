@@ -2,7 +2,6 @@
 
 #include <SDL2/SDL_render.h>
 #include <stdio.h>
-#include "gjk.h"
 
 typedef struct enode {
     struct enode *previous;
@@ -24,3 +23,4 @@ void efree(void (*destroy)(void*));
 
 // takes in function to render entities
 void erender(void (*render)(void*));
+void eupdate(void (*update)(void*));

@@ -5,11 +5,6 @@
 extern SDL_Renderer *rend;
 extern entities es;
 
-void erender(void (*render)(void*)) {
-    for (enode *node = es.head; node != NULL; node = node->next)
-        render(node->e);
-}
-
 enode* makenode(void *e, enode *next) {
     enode *node = malloc(sizeof(enode));
     node->previous = NULL;
@@ -58,4 +53,14 @@ void efree(void (*destroy)(void*)) {
         tofree = node;
     }
     es.length = 0;
+}
+
+void erender(void (*render)(void*)) {
+    for (enode *node = es.head; node != NULL; node = node->next)
+        render(node->e);
+}
+
+void eupdate(void (*update)(void*)) {
+    for (enode *node = es.head; node != NULL; node = node->next)
+        update(node->e);
 }

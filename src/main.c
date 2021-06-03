@@ -29,7 +29,7 @@ void init() {
         SDL_WINDOWPOS_CENTERED,
         WIDTH, HEIGHT,
         0);
-    rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+    rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     IMG_Init(IMG_INIT_PNG);
 }
 
@@ -39,15 +39,8 @@ int run() {
     // game start
     start(&es);
 
-    int starting_tick = SDL_GetTicks();
-    float new_time, delta;
-
     SDL_Event event;
     while (!close) {
-        // Get FPS
-        if ((1000 / MAXFPS) > SDL_GetTicks() - starting_tick)
-            SDL_Delay(1000 / MAXFPS - (SDL_GetTicks() - starting_tick));
-
         SDL_Event event;
 
         // Events mangement
@@ -64,7 +57,8 @@ int run() {
         }
 
         // update stuff
-        close = update(&es, &event);
+        close = gupdate(&es, &event);
+        eupdate(update);
 
         // Clear screen
         SDL_SetRenderDrawColor(rend, BACKGROUND, 255);
