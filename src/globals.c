@@ -2,4 +2,7 @@
 #include "entity.h"
 
 bool close = false;
-entities *es = NULL;
+entities es = {
+    .head = NULL,
+    .length = 0,
+};

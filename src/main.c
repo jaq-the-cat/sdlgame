@@ -71,7 +71,7 @@ int main() {
         SDL_RenderClear(rend);
 
         // Render stuff
-        erender();
+        // erender();
 
         // Draw to screen
         SDL_RenderPresent(rend);
@@ -79,7 +79,7 @@ int main() {
 
     // game end
     end();
-    efree(es);
+    /*efree(es);*/
 
     IMG_Quit();
     SDL_DestroyRenderer(rend);

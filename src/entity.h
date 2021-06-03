@@ -22,10 +22,15 @@ typedef struct entity {
     SDL_Texture *texture;
 } entity;
 
-typedef struct entities {
-    struct entities *previous;
+typedef struct enode {
+    struct enode *previous;
     entity e;
-    struct entities *next;
+    struct enode *next;
+} enode;
+
+typedef struct entities {
+    enode *head;
+    int length;
 } entities;
 
 // linked list stuff

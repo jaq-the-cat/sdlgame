@@ -1,10 +1,11 @@
+#include <stdlib.h>
 #include "entity.h"
 
 extern SDL_Renderer *rend;
 extern entities *es;
 
 void erender() {
-    for (entities *node = es; node != NULL; node = node->next) {
+    for (enode *node = es->head; node != NULL; node = node->next) {
         printf("rendering entity\n");
         // render node
         SDL_Rect dst = {
@@ -17,40 +18,52 @@ void erender() {
     }
 }
 
-void makenode(entities *node, entity e, entities *next) {
-    node = malloc(sizeof(entities));
-    node->previous = NULL;
-    node->e = e;
-    node->next = next;
+enode* makenode(entity e) {
+    enode *node = malloc(sizeof(enode));
+    /*node->previous = NULL;*/
+    /*node->e = e;*/
+    /*node->next = NULL;*/
+    return node;
 }
 
 void eadd(entity e) {
     // special case: first entity
-    if (es == NULL) {
-        makenode(es, e, NULL);
-        return;
+    if (es->length == 0) {
+        /*es->head = makenode(e, NULL);*/
+        makenode(e);
+        /*es->length = 1;*/
+        /*return;*/
     }
 
-    // create new node
-    makenode(es->previous, e, es);
-
-    // set head to new node
-    es = es->previous;
+    /*// create new node*/
+    /*es->head->previous = makenode(e, es->head);*/
+    /*es->head = es->head->previous;*/
+    /*es->length++;*/
 }
 
 void eremove(entity *e) {
-    entities *node = es;
+    enode *node = es->head;
+    // special case: first item
+    if (&node->e == e) {
+        es->head = node->next;
+        free(node);
+        es->length--;
+        return;
+    }
     // scroll through until node is e
-    for (entities *node = es; node != NULL && &node->e != e; node = node->next);
+    for (; node != NULL && &node->e != e; node = node->next);
     node->previous->next = node->next;
     free(node);
+    es->length--;
 }
 
 void efree() {
-    entities *node = es;
-    while (node != NULL) {
-        es = es->next;
-        free(node);
-        node = es;
+    enode *tofree = es->head;
+    enode *node;
+    while (tofree != NULL) {
+        node = tofree->next;
+        free(tofree);
+        tofree = node;
     }
+    es->length = 0;
 }
