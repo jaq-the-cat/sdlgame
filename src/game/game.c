@@ -4,14 +4,14 @@
 
 extern SDL_Renderer *rend;
 
-typedef enum ENTITY_TYPE {
+typedef enum etype {
     PLAYER,
     DMG,
     OBJECT,
-} ENTITY_TYPE;
+} etype;
 
 typedef struct entity {
-    ENTITY_TYPE type;
+    etype type;
     vec2 origin;
     vec2 velocity;
     vec2 size;
@@ -84,15 +84,13 @@ bool update(entities *es, SDL_Event *event) {
 
 void render(void *e) {
     entity *en = (entity*) e;
-    printf("{\n\t%d\n\t(%f, %f)\n\t(%f, %f)\n}\n\n",
-            en->type, en->origin.x, en->origin.y, en->size.x, en->size.y);
     SDL_Rect dst = {
         en->origin.x,
         en->origin.y,
         en->size.x,
         en->size.y,
     };
-    /*SDL_RenderCopy(rend, en->texture, NULL, &dst);*/
+    SDL_RenderCopy(rend, en->texture, NULL, &dst);
 }
 
 void destroy(void *e) {
