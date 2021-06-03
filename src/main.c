@@ -9,16 +9,15 @@
 #include <stdbool.h>
 
 #include "conf.h"
-#include "util.h"
+#include "entity.h"
+#include "kb.h"
+
+// globals
+extern bool close;
+extern buttons keys;
 
 SDL_Window *win;
 SDL_Renderer *rend;
-static bool close = false;
-
-struct Buttons {
-    bool w, a, s, d,
-        space;
-} buttons = {false, false, false, false, false};
 
 void init() {
     // window
@@ -34,13 +33,8 @@ void init() {
     IMG_Init(IMG_INIT_PNG);
 }
 
-void handleKey();
-
 int main() {
     init();
-
-    polygon octa = POLYGON(8);
-    polygen(&octa, 0, 0, 10, 10, octa.sides);
 
     int starting_tick = SDL_GetTicks();
     float new_time, delta;
@@ -81,31 +75,4 @@ int main() {
     SDL_Quit();
 
     return EXIT_SUCCESS;
-}
-
-void handleKey(SDL_Scancode scancode, int down) {
-    switch (scancode) {
-        case SDL_SCANCODE_Q:
-        case SDL_SCANCODE_ESCAPE:
-            close = true;
-            break;
-        case SDL_SCANCODE_W:
-        case SDL_SCANCODE_UP:
-            buttons.w = down;
-            break;
-        case SDL_SCANCODE_A:
-        case SDL_SCANCODE_LEFT:
-            buttons.a = down;
-            break;
-        case SDL_SCANCODE_S:
-        case SDL_SCANCODE_DOWN:
-            buttons.s = down;
-            break;
-        case SDL_SCANCODE_D:
-        case SDL_SCANCODE_RIGHT:
-            buttons.d = down;
-            break;
-        default:
-            break;
-    }
 }

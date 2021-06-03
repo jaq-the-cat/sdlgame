@@ -6,4 +6,3 @@ sdl2-config --libs --cflags
 
 -LIBS
 SDL2_image
-m
