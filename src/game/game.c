@@ -5,6 +5,8 @@
 #include "gjk.h"
 #include "entities.h"
 
+#define MOVESPEED 10
+
 extern SDL_Renderer *rend;
 
 typedef struct {
@@ -76,21 +78,22 @@ bool kbhandle(SDL_Scancode scancode, bool down) {
 
 // global update
 bool gupdate(entities *es, SDL_Event *event) {
-    bool kb = kbhandle(event->key.keysym.scancode, event->type == SDL_KEYDOWN);
-    return kb;
+    bool kbr = kbhandle(event->key.keysym.scancode, event->type == SDL_KEYDOWN);
+
+    player->velocity.x = -MOVESPEED * kb.a;
+    player->velocity.x += MOVESPEED * kb.d;
+    player->origin.x += player->velocity.x;
+
+    player->velocity.y = -MOVESPEED * kb.w;
+    player->velocity.y += MOVESPEED * kb.s;
+    player->origin.y += player->velocity.y;
+
+    return kbr;
 }
 
 // entity update
 void update(void *e) {
     entity *en = (entity*) e;
-
-    player->velocity.x = -0.4 * kb.a;
-    player->velocity.x += 0.4 * kb.d;
-    player->origin.x += player->velocity.x;
-
-    player->velocity.y = -0.4 * kb.w;
-    player->velocity.y += 0.4 * kb.s;
-    player->origin.y += player->velocity.y;
 }
 
 void render(void *e) {
