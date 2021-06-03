@@ -2,11 +2,10 @@
 #include "entity.h"
 
 extern SDL_Renderer *rend;
-extern entities *es;
+extern entities es;
 
 void erender() {
-    for (enode *node = es->head; node != NULL; node = node->next) {
-        printf("rendering entity\n");
+    for (enode *node = es.head; node != NULL; node = node->next) {
         // render node
         SDL_Rect dst = {
             node->e.origin.x,
@@ -18,52 +17,51 @@ void erender() {
     }
 }
 
-enode* makenode(entity e) {
+enode* makenode(entity e, enode *next) {
     enode *node = malloc(sizeof(enode));
-    /*node->previous = NULL;*/
-    /*node->e = e;*/
-    /*node->next = NULL;*/
+    node->previous = NULL;
+    node->e = e;
+    node->next = NULL;
     return node;
 }
 
 void eadd(entity e) {
     // special case: first entity
-    if (es->length == 0) {
-        /*es->head = makenode(e, NULL);*/
-        makenode(e);
-        /*es->length = 1;*/
-        /*return;*/
+    if (es.length == 0) {
+        es.head = makenode(e, NULL);
+        es.length = 1;
+        return;
     }
 
-    /*// create new node*/
-    /*es->head->previous = makenode(e, es->head);*/
-    /*es->head = es->head->previous;*/
-    /*es->length++;*/
+    // create new node
+    es.head->previous = makenode(e, es.head);
+    es.head = es.head->previous;
+    es.length++;
 }
 
 void eremove(entity *e) {
-    enode *node = es->head;
+    enode *node = es.head;
     // special case: first item
     if (&node->e == e) {
-        es->head = node->next;
+        es.head = node->next;
         free(node);
-        es->length--;
+        es.length--;
         return;
     }
     // scroll through until node is e
     for (; node != NULL && &node->e != e; node = node->next);
     node->previous->next = node->next;
     free(node);
-    es->length--;
+    es.length--;
 }
 
 void efree() {
-    enode *tofree = es->head;
+    enode *tofree = es.head;
     enode *node;
     while (tofree != NULL) {
         node = tofree->next;
         free(tofree);
         tofree = node;
     }
-    es->length = 0;
+    es.length = 0;
 }

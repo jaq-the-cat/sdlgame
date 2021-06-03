@@ -15,7 +15,7 @@
 
 // globals
 extern bool close;
-extern entities *es;
+extern entities es;
 
 SDL_Window *win;
 SDL_Renderer *rend;
@@ -37,7 +37,7 @@ int main() {
     init();
 
     // game start
-    start(es);
+    start(&es);
 
     int starting_tick = SDL_GetTicks();
     float new_time, delta;
@@ -64,14 +64,14 @@ int main() {
         }
 
         // update stuff
-        close = update(&event, es);
+        close = update(&es, &event);
 
         // Clear screen
         SDL_SetRenderDrawColor(rend, BACKGROUND, 255);
         SDL_RenderClear(rend);
 
         // Render stuff
-        // erender();
+        erender();
 
         // Draw to screen
         SDL_RenderPresent(rend);
