@@ -4,24 +4,9 @@
 #include <stdio.h>
 #include "gjk.h"
 
-typedef enum ENTITY_TYPE {
-    PLAYER,
-    DMG,
-    OBJECT,
-} ENTITY_TYPE;
-
-typedef struct entity {
-    ENTITY_TYPE type;
-    vec2 origin;
-    vec2 velocity;
-    vec2 size;
-    float gravity;
-    SDL_Texture *texture;
-} entity;
-
 typedef struct enode {
     struct enode *previous;
-    entity e;
+    void *e;
     struct enode *next;
 } enode;
 
@@ -30,10 +15,12 @@ typedef struct entities {
     int length;
 } entities;
 
-// linked list stuff
-void eadd(entity e);
-void eremove(entity *e);
-void efree();
+void eadd(void *e);
+void eremove(void *e);
 
-// sdl
-void erender();
+// Takes in a function to destroy any elements inside the entity
+// that need to be destroyed
+void efree(void (*destroy)(void*));
+
+// takes in function to render entities
+void erender(void (*render)(void*));

@@ -5,22 +5,12 @@
 extern SDL_Renderer *rend;
 extern entities es;
 
-void erender() {
-    int i=0;
-    for (enode *node = es.head; node != NULL; node = node->next) {
-        // render node
-        SDL_Rect dst = {
-            node->e.origin.x,
-            node->e.origin.y,
-            node->e.size.x,
-            node->e.size.y,
-        };
-        SDL_RenderCopy(rend, node->e.texture, NULL, &dst);
-        i++;
-    }
+void erender(void (*render)(void*)) {
+    for (enode *node = es.head; node != NULL; node = node->next)
+        render(node->e);
 }
 
-enode* makenode(entity e, enode *next) {
+enode* makenode(void *e, enode *next) {
     enode *node = malloc(sizeof(enode));
     node->previous = NULL;
     node->e = e;
@@ -28,7 +18,7 @@ enode* makenode(entity e, enode *next) {
     return node;
 }
 
-void eadd(entity e) {
+void eadd(void *e) {
     // special case: first entity
     if (es.length == 0) {
         es.head = makenode(e, NULL);
@@ -42,7 +32,7 @@ void eadd(entity e) {
     es.length++;
 }
 
-void eremove(entity *e) {
+void eremove(void *e) {
     enode *node = es.head;
     // special case: first item
     if (&node->e == e) {
@@ -58,12 +48,12 @@ void eremove(entity *e) {
     es.length--;
 }
 
-void efree() {
+void efree(void (*destroy)(void*)) {
     enode *tofree = es.head;
     enode *node;
     while (tofree != NULL) {
         node = tofree->next;
-        SDL_DestroyTexture(tofree->e.texture);
+        destroy(tofree->e);
         free(tofree);
         tofree = node;
     }

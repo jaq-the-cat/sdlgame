@@ -4,8 +4,23 @@
 
 extern SDL_Renderer *rend;
 
+typedef enum ENTITY_TYPE {
+    PLAYER,
+    DMG,
+    OBJECT,
+} ENTITY_TYPE;
+
+typedef struct entity {
+    ENTITY_TYPE type;
+    vec2 origin;
+    vec2 velocity;
+    vec2 size;
+    float gravity;
+    SDL_Texture *texture;
+} entity;
+
 void start(entities *es) {
-    eadd((entity) {
+    eadd(&(entity) {
         .type = PLAYER,
         .origin = {0, 0},
         .velocity = {0, 0},
@@ -14,7 +29,7 @@ void start(entities *es) {
         .texture = IMG_LoadTexture(rend, "sprites/player.png"),
     }); // player
 
-    eadd((entity) {
+    eadd(&(entity) {
         .type = PLAYER,
         .origin = {65, 0},
         .velocity = {0, 0},
@@ -24,7 +39,7 @@ void start(entities *es) {
     }); // player
 
     for (int i=0; i<20; i++) {
-        eadd((entity) {
+        eadd(&(entity) {
             .type = OBJECT,
             .origin = {i*64, 64*2},
             .velocity = {0, 0},
@@ -35,7 +50,7 @@ void start(entities *es) {
     }
 
     for (int i=0; i<20; i++) {
-        eadd((entity) {
+        eadd(&(entity) {
             .type = OBJECT,
             .origin = {i*64, 64*6},
             .velocity = {0, 0},
@@ -54,6 +69,22 @@ bool update(entities *es, SDL_Event *event) {
         break;
     }
     return false;
+}
+
+void render(void *e) {
+    entity *en = (entity*) e;
+    printf("(%f, %f) (%f, %f)\n", en->origin.x, en->origin.y, en->size.x, en->size.y);
+    SDL_Rect dst = {
+        en->origin.x,
+        en->origin.y,
+        en->size.x,
+        en->size.y,
+    };
+    /*SDL_RenderCopy(rend, en->texture, NULL, &dst);*/
+}
+
+void destroy(void *e) {
+    SDL_DestroyTexture(((entity*) e)->texture);
 }
 
 void end() {
