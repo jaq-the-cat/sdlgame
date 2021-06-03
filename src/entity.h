@@ -6,11 +6,8 @@
 
 typedef enum ENTITY_TYPE {
     PLAYER,
-    ENEMY,
+    DMG,
     OBJECT,
-    OBJECT_DMG,
-    OBJECT_MOV,
-    OBJECT_MOV_DMG,
 } ENTITY_TYPE;
 
 typedef struct entity {

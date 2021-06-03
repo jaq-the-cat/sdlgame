@@ -16,12 +16,34 @@ void start(entities *es) {
 
     eadd((entity) {
         .type = PLAYER,
-        .origin = {32, 32},
+        .origin = {65, 0},
         .velocity = {0, 0},
         .size = {64, 64},
         .gravity = 1,
         .texture = IMG_LoadTexture(rend, "sprites/player.png"),
     }); // player
+
+    for (int i=0; i<20; i++) {
+        eadd((entity) {
+            .type = OBJECT,
+            .origin = {i*64, 64*2},
+            .velocity = {0, 0},
+            .size = {64, 64},
+            .gravity = 0,
+            .texture = IMG_LoadTexture(rend, "sprites/ground.png"),
+        }); // player
+    }
+
+    for (int i=0; i<20; i++) {
+        eadd((entity) {
+            .type = OBJECT,
+            .origin = {i*64, 64*6},
+            .velocity = {0, 0},
+            .size = {64, 64},
+            .gravity = 0,
+            .texture = IMG_LoadTexture(rend, "sprites/ground.png"),
+        }); // player
+    }
 }
 
 bool update(entities *es, SDL_Event *event) {
