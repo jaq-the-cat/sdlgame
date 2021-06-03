@@ -57,6 +57,11 @@ int main() {
         case SDL_QUIT:
             close = true;
             break;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                close = true;
+                break;
+            }
         }
 
         // update stuff
